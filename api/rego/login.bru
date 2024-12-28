@@ -1,0 +1,17 @@
+meta {
+  name: login
+  type: http
+  seq: 1
+}
+
+post {
+  url: https://regodemo.com/api/login.php
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": ""
+  }
+}
