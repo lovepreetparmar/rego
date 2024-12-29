@@ -9,6 +9,7 @@ import '../widgets/footer_text.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_enums.dart';
 import '../screens/web_view_screen.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -32,14 +33,39 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _handleLogin() {
+  void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => WebViewScreen(language: _selectedLanguage),
-        ),
-      );
+      final username = _usernameController.text;
+      final password = _passwordController.text;
+
+      final loginUrl = Uri.parse(
+          'https://regodemo.com/mob/ajax/ajax_login.php?username=$username&password=$password');
+
+      try {
+        final response = await http.get(loginUrl);
+        final setCookie = response.headers['set-cookie'];
+
+        if (response.statusCode == 200) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WebViewScreen(
+                language: _selectedLanguage,
+                initialUrl: 'https://regodemo.com/mob/index.php?mn=2',
+                cookie: setCookie ?? '',
+              ),
+            ),
+          );
+        } else {
+          setState(() {
+            _errorMessage = 'Login failed: ${response.statusCode}';
+          });
+        }
+      } catch (e) {
+        setState(() {
+          _errorMessage = 'Network error: $e';
+        });
+      }
     }
   }
 

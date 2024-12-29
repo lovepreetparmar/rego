@@ -6,10 +6,14 @@ import '../widgets/app_header.dart';
 
 class WebViewScreen extends StatefulWidget {
   final Language language;
+  final String initialUrl;
+  final String cookie;
 
   const WebViewScreen({
     Key? key,
     required this.language,
+    required this.initialUrl,
+    required this.cookie,
   }) : super(key: key);
 
   @override
@@ -24,7 +28,18 @@ class _WebViewScreenState extends State<WebViewScreen> {
     super.initState();
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse('https://youtube.com'));
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onNavigationRequest: (NavigationRequest request) async {
+            // Set cookie before any navigation
+            await controller.runJavaScript(
+              'document.cookie="${widget.cookie}"',
+            );
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.initialUrl));
   }
 
   @override
