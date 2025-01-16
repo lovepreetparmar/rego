@@ -4,11 +4,13 @@ import '../utils/app_enums.dart';
 class LogoLanguageSelector extends StatelessWidget {
   final Language selectedLanguage;
   final void Function(Language) onLanguageChanged;
+  final bool showLock;
 
   const LogoLanguageSelector({
     Key? key,
     required this.selectedLanguage,
     required this.onLanguageChanged,
+    this.showLock = true,
   }) : super(key: key);
 
   @override
@@ -92,15 +94,16 @@ class LogoLanguageSelector extends StatelessWidget {
               thickness: 1,
               color: Color(0xFF3B5998),
             ),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: const Icon(
-                Icons.lock_outline,
-                color: Colors.grey,
-                size: 20,
+            if (showLock)
+              Container(
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: const Icon(
+                  Icons.lock_outline,
+                  color: Colors.grey,
+                  size: 20,
+                ),
               ),
-            ),
           ],
         ),
       ],

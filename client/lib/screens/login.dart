@@ -9,6 +9,7 @@ import '../widgets/footer_text.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_enums.dart';
 import '../screens/web_view_screen.dart';
+import '../screens/request_password.dart';
 import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
@@ -25,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
   String? _errorMessage;
   Language _selectedLanguage = Language.en;
+  bool _isPressed = false;
 
   @override
   void dispose() {
@@ -119,6 +121,38 @@ class _LoginScreenState extends State<LoginScreen> {
                   onLogin: _handleLogin,
                   onForgotPassword: () {},
                   language: _selectedLanguage,
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: InkWell(
+                    onTapDown: (_) => setState(() => _isPressed = true),
+                    onTapUp: (_) => setState(() => _isPressed = false),
+                    onTapCancel: () => setState(() => _isPressed = false),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RequestPassword(),
+                        ),
+                      );
+                    },
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    child: Column(
+                      children: [
+                        Text(
+                          'Or, Login with code?',
+                          style: TextStyle(
+                            color: const Color(0xFF3B5998),
+                            fontSize: 16,
+                            decoration: _isPressed
+                                ? TextDecoration.underline
+                                : TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 if (_errorMessage != null) ...[
                   const SizedBox(height: 16),
