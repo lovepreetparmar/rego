@@ -66,6 +66,10 @@ class AppStrings {
       Language.en: 'Or, Login with code?',
       Language.th: 'หรือ เข้าสู่ระบบด้วยรหัส?',
     },
+    'forgotPasswordTitle': {
+      Language.en: 'Forgot password',
+      Language.th: 'ลืมรหัสผ่าน',
+    },
   };
 
   static String getString(String key, Language language) {
