@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'screens/login.dart';
+import 'providers/language_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,18 +13,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: MaterialApp(
-        title: 'Rego',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color.fromARGB(255, 255, 255, 255)),
-          useMaterial3: true,
-        ),
-        home: const SafeArea(
-          child: Scaffold(
-            body: LoginScreen(),
+    return ChangeNotifierProvider(
+      create: (_) => LanguageProvider(),
+      child: SafeArea(
+        child: MaterialApp(
+          title: 'Rego App',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
           ),
+          home: const LoginScreen(),
         ),
       ),
     );

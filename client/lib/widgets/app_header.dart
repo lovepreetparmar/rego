@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../utils/app_strings.dart';
 import '../utils/app_enums.dart';
 
 class AppHeader extends StatelessWidget {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../utils/app_constants.dart';
 
 class AppWrapper extends StatelessWidget {
   final Widget child;

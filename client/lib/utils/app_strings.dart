@@ -54,6 +54,18 @@ class AppStrings {
           'We always available for you all time long to answer your questions.',
       Language.th: 'เราพร้อมให้บริการคุณตลอดเวลาเพื่อตอบคำถามของคุณ',
     },
+    'enterSixDigitCode': {
+      Language.en: 'Enter 6 digit code',
+      Language.th: 'ป้อนรหัส 6 หลัก',
+    },
+    'loginWithCode': {
+      Language.en: 'Login with code',
+      Language.th: 'เข้าสู่ระบบด้วยรหัส',
+    },
+    'loginWithCodeQuestion': {
+      Language.en: 'Or, Login with code?',
+      Language.th: 'หรือ เข้าสู่ระบบด้วยรหัส?',
+    },
   };
 
   static String getString(String key, Language language) {
