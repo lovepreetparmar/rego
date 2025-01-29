@@ -11,6 +11,7 @@ import '../utils/app_strings.dart';
 import '../utils/app_enums.dart';
 import '../screens/web_view_screen.dart';
 import '../screens/request_password.dart';
+import '../screens/forgot_password.dart';
 import 'package:http/http.dart' as http;
 import '../providers/language_provider.dart';
 
@@ -121,7 +122,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 16),
                 LoginButtons(
                   onLogin: _handleLogin,
-                  onForgotPassword: () {},
+                  onForgotPassword: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ForgotPasswordScreen(),
+                      ),
+                    );
+                  },
                   language: selectedLanguage,
                 ),
                 const SizedBox(height: 16),
