@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/login_header.dart';
 import '../widgets/logo_language_selector.dart';
 import '../widgets/login_form_field.dart';
@@ -11,6 +12,7 @@ import '../utils/app_enums.dart';
 import '../screens/web_view_screen.dart';
 import '../screens/request_password.dart';
 import 'package:http/http.dart' as http;
+import '../providers/language_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -25,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _rememberMe = false;
   String? _errorMessage;
-  Language _selectedLanguage = Language.en;
   bool _isPressed = false;
 
   @override
@@ -52,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => WebViewScreen(
-                language: _selectedLanguage,
+                language: context.read<LanguageProvider>().currentLanguage,
                 initialUrl: 'https://regodemo.com/mob/index.php?mn=2',
                 cookie: setCookie ?? '',
               ),
@@ -72,13 +73,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleLanguageChange(Language language) {
-    setState(() {
-      _selectedLanguage = language;
-    });
+    context.read<LanguageProvider>().setLanguage(language);
   }
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider = context.watch<LanguageProvider>();
+    final selectedLanguage = languageProvider.currentLanguage;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -88,39 +90,39 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                LoginHeader(language: _selectedLanguage),
+                LoginHeader(language: selectedLanguage),
                 const SizedBox(height: 24),
                 LogoLanguageSelector(
-                  selectedLanguage: _selectedLanguage,
+                  selectedLanguage: selectedLanguage,
                   onLanguageChanged: _handleLanguageChange,
                 ),
                 const SizedBox(height: 24),
                 LoginFormField(
                   controller: _usernameController,
                   autoFocus: true,
-                  label: AppStrings.getString('username', _selectedLanguage),
+                  label: AppStrings.getString('username', selectedLanguage),
                   errorText: AppStrings.getString(
-                      'pleaseEnterUsername', _selectedLanguage),
+                      'pleaseEnterUsername', selectedLanguage),
                 ),
                 const SizedBox(height: 16),
                 LoginFormField(
                   controller: _passwordController,
-                  label: AppStrings.getString('password', _selectedLanguage),
+                  label: AppStrings.getString('password', selectedLanguage),
                   errorText: AppStrings.getString(
-                      'pleaseEnterPassword', _selectedLanguage),
+                      'pleaseEnterPassword', selectedLanguage),
                   isPassword: true,
                 ),
                 const SizedBox(height: 16),
                 RememberMeSwitch(
                   value: _rememberMe,
-                  language: _selectedLanguage,
+                  language: selectedLanguage,
                   onChanged: (value) => setState(() => _rememberMe = value),
                 ),
                 const SizedBox(height: 16),
                 LoginButtons(
                   onLogin: _handleLogin,
                   onForgotPassword: () {},
-                  language: _selectedLanguage,
+                  language: selectedLanguage,
                 ),
                 const SizedBox(height: 16),
                 Center(
@@ -141,7 +143,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: [
                         Text(
-                          'Or, Login with code?',
+                          AppStrings.getString(
+                              'loginWithCodeQuestion', selectedLanguage),
                           style: TextStyle(
                             color: const Color(0xFF3B5998),
                             fontSize: 16,
@@ -156,9 +159,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 if (_errorMessage != null) ...[
                   const SizedBox(height: 16),
-                  ErrorMessage(language: _selectedLanguage),
+                  ErrorMessage(language: selectedLanguage),
                 ],
-                FooterText(language: _selectedLanguage),
+                FooterText(language: selectedLanguage),
               ],
             ),
           ),

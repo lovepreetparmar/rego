@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import '../providers/language_provider.dart';
 import '../widgets/logo_language_selector.dart';
 import '../widgets/footer_text.dart';
 import '../utils/app_enums.dart';
 import '../widgets/app_wrapper.dart';
+import '../utils/app_strings.dart';
+import '../screens/login.dart';
+import 'dart:convert';
 
 class RequestPassword extends StatefulWidget {
   const RequestPassword({super.key});
@@ -22,7 +28,6 @@ class _RequestPasswordState extends State<RequestPassword> {
     (index) => FocusNode(),
   );
   final emailController = TextEditingController();
-  Language _selectedLanguage = Language.en;
 
   @override
   void dispose() {
@@ -37,13 +42,14 @@ class _RequestPasswordState extends State<RequestPassword> {
   }
 
   void _handleLanguageChange(Language language) {
-    setState(() {
-      _selectedLanguage = language;
-    });
+    context.read<LanguageProvider>().setLanguage(language);
   }
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider = context.watch<LanguageProvider>();
+    final selectedLanguage = languageProvider.currentLanguage;
+
     return Scaffold(
       body: SafeArea(
         child: AppWrapper(
@@ -51,7 +57,7 @@ class _RequestPasswordState extends State<RequestPassword> {
             children: [
               const SizedBox(height: 16),
               LogoLanguageSelector(
-                selectedLanguage: _selectedLanguage,
+                selectedLanguage: selectedLanguage,
                 onLanguageChanged: _handleLanguageChange,
                 showLock: false,
               ),
@@ -62,9 +68,10 @@ class _RequestPasswordState extends State<RequestPassword> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Text(
-                          'Enter 6 digit code',
-                          style: TextStyle(
+                        Text(
+                          AppStrings.getString(
+                              'enterSixDigitCode', selectedLanguage),
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -102,31 +109,99 @@ class _RequestPasswordState extends State<RequestPassword> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
-                          'Enter your email',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: emailController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                        const SizedBox(height: 24),
                         ElevatedButton(
-                          onPressed: () {
-                            // Handle request password
+                          onPressed: () async {
+                            // Combine all code digits
+                            final code =
+                                codeControllers.map((c) => c.text).join();
+
+                            if (code.length != 6) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    AppStrings.getString('pleaseEnterValidCode',
+                                        selectedLanguage),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              return;
+                            }
+
+                            try {
+                              // Create multipart request
+                              var request = http.MultipartRequest(
+                                'POST',
+                                Uri.parse('https://regodemo.com/api/code.php'),
+                              );
+
+                              // Add form data
+                              request.fields['code'] = code;
+
+                              // Send the request
+                              var response = await request.send();
+                              var responseData =
+                                  await response.stream.bytesToString();
+
+                              // Parse the response data to get the message
+                              Map<String, dynamic> jsonResponse = {};
+                              try {
+                                jsonResponse = Map<String, dynamic>.from(
+                                    json.decode(responseData));
+                              } catch (e) {
+                                print('Error parsing response: $e');
+                              }
+
+                              if (jsonResponse["status"] == true) {
+                                // Show success message if available
+                                if (jsonResponse['msg'] != null) {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        jsonResponse['msg'].toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                }
+
+                                // Navigate to Login screen on success
+                                if (!context.mounted) return;
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginScreen(),
+                                  ),
+                                );
+                              } else {
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Error: ${jsonResponse["msg"]}',
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Network error: $e',
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4A64A9),
@@ -135,9 +210,10 @@ class _RequestPasswordState extends State<RequestPassword> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text(
-                            'Request Password',
-                            style: TextStyle(
+                          child: Text(
+                            AppStrings.getString(
+                                'loginWithCode', selectedLanguage),
+                            style: const TextStyle(
                               fontSize: 16,
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -149,7 +225,7 @@ class _RequestPasswordState extends State<RequestPassword> {
                   ),
                 ),
               ),
-              FooterText(language: _selectedLanguage),
+              FooterText(language: selectedLanguage),
             ],
           ),
         ),
