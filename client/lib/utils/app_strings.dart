@@ -70,6 +70,34 @@ class AppStrings {
       Language.en: 'Forgot password',
       Language.th: 'ลืมรหัสผ่าน',
     },
+    'resetPasswordTitle': {
+      Language.en: 'Reset Password',
+      Language.th: 'รีเซ็ตรหัสผ่าน',
+    },
+    'newPassword': {
+      Language.en: 'New Password',
+      Language.th: 'รหัสผ่านใหม่',
+    },
+    'confirmPassword': {
+      Language.en: 'Confirm Password',
+      Language.th: 'ยืนยันรหัสผ่าน',
+    },
+    'pleaseEnterNewPassword': {
+      Language.en: 'Please enter new password',
+      Language.th: 'กรุณากรอกรหัสผ่านใหม่',
+    },
+    'pleaseConfirmPassword': {
+      Language.en: 'Please confirm your password',
+      Language.th: 'กรุณายืนยันรหัสผ่าน',
+    },
+    'resetPassword': {
+      Language.en: 'Reset Password',
+      Language.th: 'รีเซ็ตรหัสผ่าน',
+    },
+    'passwordsDoNotMatch': {
+      Language.en: 'Passwords do not match',
+      Language.th: 'รหัสผ่านไม่ตรงกัน',
+    },
   };
 
   static String getString(String key, Language language) {

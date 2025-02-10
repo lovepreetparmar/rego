@@ -4,6 +4,8 @@ import 'screens/login.dart';
 import 'providers/language_provider.dart';
 
 void main() {
+  // Ensure Flutter bindings are initialized
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
