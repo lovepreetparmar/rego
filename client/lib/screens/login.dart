@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import '../widgets/login_header.dart';
 import '../widgets/logo_language_selector.dart';
 import '../widgets/login_form_field.dart';
@@ -48,14 +49,16 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         final response = await http.get(loginUrl);
         final setCookie = response.headers['set-cookie'];
-
-        if (response.statusCode == 200) {
+        print(response.statusCode);
+        print(response.body);
+        print(setCookie);
+        if (response.statusCode == 200 && response.body.contains('success')) {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => WebViewScreen(
                 language: context.read<LanguageProvider>().currentLanguage,
-                initialUrl: 'https://regodemo.com/mob/index.php?mn=2',
+                initialUrl: 'https://regodemo.com/mob/index.php?client=app',
                 cookie: setCookie ?? '',
               ),
             ),

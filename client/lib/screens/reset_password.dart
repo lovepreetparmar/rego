@@ -12,7 +12,8 @@ import '../providers/language_provider.dart';
 import 'dart:convert';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({Key? key}) : super(key: key);
+  const ResetPassword({Key? key, required this.code}) : super(key: key);
+  final String code;
 
   @override
   _ResetPasswordState createState() => _ResetPasswordState();
@@ -23,7 +24,6 @@ class _ResetPasswordState extends State<ResetPassword> {
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   String? _errorMessage;
-
   @override
   void dispose() {
     _newPasswordController.dispose();
@@ -48,11 +48,11 @@ class _ResetPasswordState extends State<ResetPassword> {
       try {
         var request = http.MultipartRequest(
           'POST',
-          Uri.parse('https://regodemo.com/api/resetpassword.php'),
+          Uri.parse('https://regodemo.com/api/password.php'),
         );
-
-        request.fields['password'] = newPassword;
-        request.fields['confirm_password'] = confirmPassword;
+        request.fields['code'] = widget.code;
+        request.fields['npassword'] = newPassword;
+        request.fields['cpassword'] = confirmPassword;
 
         var response = await request.send();
         var responseString = await response.stream.bytesToString();

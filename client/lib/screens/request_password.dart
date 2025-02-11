@@ -32,11 +32,6 @@ class _RequestPasswordState extends State<RequestPassword> {
   @override
   void initState() {
     super.initState();
-    // Hardcode test code: 123456
-    final testCode = "123456";
-    for (var i = 0; i < testCode.length && i < codeControllers.length; i++) {
-      codeControllers[i].text = testCode[i];
-    }
   }
 
   @override
@@ -184,7 +179,9 @@ class _RequestPasswordState extends State<RequestPassword> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const ResetPassword(),
+                                    builder: (context) => ResetPassword(
+                                      code: code,
+                                    ),
                                   ),
                                 );
                               } else {
