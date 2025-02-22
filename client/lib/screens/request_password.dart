@@ -8,7 +8,7 @@ import '../widgets/footer_text.dart';
 import '../utils/app_enums.dart';
 import '../widgets/app_wrapper.dart';
 import '../utils/app_strings.dart';
-import '../screens/login.dart';
+import '../screens/reset_password.dart';
 import 'dart:convert';
 
 class RequestPassword extends StatefulWidget {
@@ -28,6 +28,11 @@ class _RequestPasswordState extends State<RequestPassword> {
     (index) => FocusNode(),
   );
   final emailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -174,7 +179,9 @@ class _RequestPasswordState extends State<RequestPassword> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const LoginScreen(),
+                                    builder: (context) => ResetPassword(
+                                      code: code,
+                                    ),
                                   ),
                                 );
                               } else {
