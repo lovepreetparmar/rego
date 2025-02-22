@@ -100,69 +100,75 @@ class _ResetPasswordState extends State<ResetPassword> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                LoginHeader(language: selectedLanguage),
-                const SizedBox(height: 24),
-                LogoLanguageSelector(
-                  selectedLanguage: selectedLanguage,
-                  onLanguageChanged: _handleLanguageChange,
-                ),
-                const SizedBox(height: 24),
-                LoginFormField(
-                  controller: _newPasswordController,
-                  label: AppStrings.getString('newPassword', selectedLanguage),
-                  errorText: AppStrings.getString(
-                      'pleaseEnterNewPassword', selectedLanguage),
-                  isPassword: true,
-                ),
-                const SizedBox(height: 16),
-                LoginFormField(
-                  controller: _confirmPasswordController,
-                  label:
-                      AppStrings.getString('confirmPassword', selectedLanguage),
-                  errorText: AppStrings.getString(
-                      'pleaseConfirmPassword', selectedLanguage),
-                  isPassword: true,
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _handleResetPassword,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4A64A9),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              LoginHeader(language: selectedLanguage),
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    LogoLanguageSelector(
+                      selectedLanguage: selectedLanguage,
+                      onLanguageChanged: _handleLanguageChange,
                     ),
-                  ),
-                  child: Text(
-                    AppStrings.getString('resetPassword', selectedLanguage),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                    const SizedBox(height: 24),
+                    LoginFormField(
+                      controller: _newPasswordController,
+                      label:
+                          AppStrings.getString('newPassword', selectedLanguage),
+                      errorText: AppStrings.getString(
+                          'pleaseEnterNewPassword', selectedLanguage),
+                      isPassword: true,
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    LoginFormField(
+                      controller: _confirmPasswordController,
+                      label: AppStrings.getString(
+                          'confirmPassword', selectedLanguage),
+                      errorText: AppStrings.getString(
+                          'pleaseConfirmPassword', selectedLanguage),
+                      isPassword: true,
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: _handleResetPassword,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4A64A9),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        AppStrings.getString('resetPassword', selectedLanguage),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    if (_errorMessage != null) ...[
+                      const SizedBox(height: 16),
+                      Text(
+                        _errorMessage!,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                    FooterText(language: selectedLanguage),
+                  ],
                 ),
-                if (_errorMessage != null) ...[
-                  const SizedBox(height: 16),
-                  Text(
-                    _errorMessage!,
-                    style: const TextStyle(
-                      color: Colors.red,
-                      fontSize: 14,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-                FooterText(language: selectedLanguage),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
