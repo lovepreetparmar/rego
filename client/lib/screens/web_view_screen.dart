@@ -101,7 +101,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   void dispose() {
-    print("DISPOSE");
     _disposeController();
     super.dispose();
   }
@@ -126,64 +125,61 @@ class _WebViewScreenState extends State<WebViewScreen> {
         return true;
       },
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Container(
+        body: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF3B5998),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
+                ),
+              ),
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                flexibleSpace: AppHeader(
+                  language: widget.language,
+                  title: 'Welcome to Rego',
+                ),
+                actions: [
+                  TextButton.icon(
+                    onPressed: () async {
+                      await _disposeController();
+                      if (mounted) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()),
+                          (route) => false,
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.logout, color: Colors.white),
+                    label: const Text(
+                      'Logout',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3B5998),
+                  color: Colors.white,
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    topRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
                   ),
                 ),
-                child: AppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  automaticallyImplyLeading: false,
-                  flexibleSpace: AppHeader(
-                    language: widget.language,
-                    title: 'Welcome to Rego',
-                  ),
-                  actions: [
-                    TextButton.icon(
-                      onPressed: () async {
-                        await _disposeController();
-                        if (mounted) {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => const LoginScreen()),
-                            (route) => false,
-                          );
-                        }
-                      },
-                      icon: const Icon(Icons.logout, color: Colors.white),
-                      label: const Text(
-                        'Logout',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
+                clipBehavior: Clip.antiAlias,
+                child: _isControllerReady && controller != null
+                    ? WebViewWidget(controller: controller!)
+                    : const Center(child: CircularProgressIndicator()),
               ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                    ),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: _isControllerReady && controller != null
-                      ? WebViewWidget(controller: controller!)
-                      : const Center(child: CircularProgressIndicator()),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
