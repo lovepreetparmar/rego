@@ -9,6 +9,7 @@ import '../utils/app_enums.dart';
 import '../widgets/app_wrapper.dart';
 import '../utils/app_strings.dart';
 import '../screens/reset_password.dart';
+import '../models/user_data.dart';
 import 'dart:convert';
 
 class LoginWithCode extends StatefulWidget {
@@ -159,13 +160,17 @@ class _LoginWithCodeState extends State<LoginWithCode> {
                               }
 
                               if (jsonResponse["status"] == true) {
+                                // Create UserData object from response
+                                final userData =
+                                    UserData.fromJson(jsonResponse);
+
                                 // Show success message if available
-                                if (jsonResponse['msg'] != null) {
+                                if (userData.msg.isNotEmpty) {
                                   if (!context.mounted) return;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
-                                        jsonResponse['msg'].toString(),
+                                        userData.msg,
                                         style: const TextStyle(
                                             color: Colors.white),
                                       ),
@@ -181,6 +186,7 @@ class _LoginWithCodeState extends State<LoginWithCode> {
                                   MaterialPageRoute(
                                     builder: (context) => ResetPassword(
                                       code: code,
+                                      userData: userData,
                                     ),
                                   ),
                                 );

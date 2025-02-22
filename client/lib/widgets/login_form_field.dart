@@ -6,6 +6,8 @@ class LoginFormField extends StatefulWidget {
   final String errorText;
   final bool isPassword;
   final bool autoFocus;
+  final bool enabled;
+
   const LoginFormField({
     Key? key,
     required this.controller,
@@ -13,6 +15,7 @@ class LoginFormField extends StatefulWidget {
     required this.errorText,
     this.isPassword = false,
     this.autoFocus = false,
+    this.enabled = true,
   }) : super(key: key);
 
   @override
@@ -39,6 +42,7 @@ class _LoginFormFieldState extends State<LoginFormField> {
           controller: widget.controller,
           obscureText: widget.isPassword ? _obscureText : false,
           autofocus: widget.autoFocus,
+          enabled: widget.enabled,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
             contentPadding: const EdgeInsets.symmetric(
@@ -60,6 +64,7 @@ class _LoginFormFieldState extends State<LoginFormField> {
                 : null,
           ),
           validator: (value) {
+            if (!widget.enabled) return null;
             if (value == null || value.isEmpty) {
               return widget.errorText;
             }

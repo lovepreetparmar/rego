@@ -7,13 +7,20 @@ import '../widgets/footer_text.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_enums.dart';
 import '../screens/login.dart';
+import '../models/user_data.dart';
 import 'package:http/http.dart' as http;
 import '../providers/language_provider.dart';
 import 'dart:convert';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({Key? key, required this.code}) : super(key: key);
+  const ResetPassword({
+    Key? key,
+    required this.code,
+    required this.userData,
+  }) : super(key: key);
+
   final String code;
+  final UserData userData;
 
   @override
   _ResetPasswordState createState() => _ResetPasswordState();
@@ -117,6 +124,14 @@ class _ResetPasswordState extends State<ResetPassword> {
                       onLanguageChanged: _handleLanguageChange,
                     ),
                     const SizedBox(height: 24),
+                    LoginFormField(
+                      controller:
+                          TextEditingController(text: widget.userData.username),
+                      label: AppStrings.getString('username', selectedLanguage),
+                      errorText: '',
+                      enabled: false,
+                    ),
+                    const SizedBox(height: 16),
                     LoginFormField(
                       controller: _newPasswordController,
                       label:
