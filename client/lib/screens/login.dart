@@ -16,6 +16,7 @@ import '../screens/forgot_password.dart';
 import 'package:http/http.dart' as http;
 import '../providers/language_provider.dart';
 import '../services/session_service.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -28,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _storage = const FlutterSecureStorage();
   bool _rememberMe = false;
   String? _errorMessage;
   bool _isPressed = false;
@@ -36,7 +38,41 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    _loadSavedCredentials();
     _checkSession();
+  }
+
+  Future<void> _loadSavedCredentials() async {
+    try {
+      final username = await _storage.read(key: 'username');
+      final password = await _storage.read(key: 'password');
+      final rememberMe = await _storage.read(key: 'remember_me');
+
+      if (username != null && password != null && rememberMe == 'true') {
+        setState(() {
+          _usernameController.text = username;
+          _passwordController.text = password;
+          _rememberMe = true;
+        });
+      }
+    } catch (e) {
+      // Handle error silently
+      debugPrint('Error loading credentials: $e');
+    }
+  }
+
+  Future<void> _saveCredentials() async {
+    try {
+      if (_rememberMe) {
+        await _storage.write(key: 'username', value: _usernameController.text);
+        await _storage.write(key: 'password', value: _passwordController.text);
+        await _storage.write(key: 'remember_me', value: 'true');
+      } else {
+        await _storage.deleteAll();
+      }
+    } catch (e) {
+      debugPrint('Error saving credentials: $e');
+    }
   }
 
   Future<void> _checkSession() async {
@@ -81,6 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
         final response = await http.get(loginUrl);
         final setCookie = response.headers['set-cookie'];
         if (response.statusCode == 200 && response.body.contains('success')) {
+          await _saveCredentials();
           if (setCookie != null) {
             await SessionService.saveSessionCookie(setCookie);
           }
