@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       create: (_) => LanguageProvider(),
       child: SafeArea(
         child: MaterialApp(
-          title: 'Rego App',
+          title: 'Rego HR',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
