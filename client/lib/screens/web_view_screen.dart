@@ -23,6 +23,7 @@ class WebViewScreen extends StatefulWidget {
 class _WebViewScreenState extends State<WebViewScreen> {
   WebViewController? controller;
   bool _isControllerReady = false;
+  bool _isDisposed = false;
 
   @override
   void initState() {
@@ -32,7 +33,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
     }
   }
 
+  @override
+  void dispose() {
+    _isDisposed = true;
+    _disposeController();
+    super.dispose();
+  }
+
   Future<void> _initController() async {
+    if (_isDisposed) return;
+
     if (controller != null) {
       await controller!.clearCache();
       await controller!.clearLocalStorage();
@@ -91,7 +101,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
       },
     );
 
-    if (mounted) {
+    if (!_isDisposed && mounted) {
       setState(() {
         controller = webViewController;
         _isControllerReady = true;
@@ -99,21 +109,22 @@ class _WebViewScreenState extends State<WebViewScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    _disposeController();
-    super.dispose();
-  }
-
   Future<void> _disposeController() async {
     if (controller != null) {
-      await controller!.clearCache();
-      await controller!.clearLocalStorage();
-      await controller!.setJavaScriptMode(JavaScriptMode.disabled);
-      setState(() {
-        controller = null;
-        _isControllerReady = false;
-      });
+      try {
+        await controller!.clearCache();
+        await controller!.clearLocalStorage();
+        await controller!.setJavaScriptMode(JavaScriptMode.disabled);
+
+        if (!_isDisposed && mounted) {
+          setState(() {
+            controller = null;
+            _isControllerReady = false;
+          });
+        }
+      } catch (e) {
+        print('Error during controller disposal: $e');
+      }
     }
   }
 
