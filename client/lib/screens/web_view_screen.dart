@@ -3,6 +3,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'login.dart';
 import '../utils/app_enums.dart';
 import '../widgets/app_header.dart';
+import '../services/session_service.dart';
 
 class WebViewScreen extends StatefulWidget {
   final Language language;
@@ -77,9 +78,19 @@ class _WebViewScreenState extends State<WebViewScreen> {
     await webViewController.setNavigationDelegate(
       NavigationDelegate(
         onNavigationRequest: (NavigationRequest request) async {
+          // Check if redirected to login page
+          if (request.url.contains('login.php')) {
+            await SessionService.deleteSessionCookie();
+            if (!mounted) return NavigationDecision.prevent;
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+              (route) => false,
+            );
+            return NavigationDecision.prevent;
+          }
+
           // Set cookies before each navigation
           await webViewController.runJavaScript(cookieScript);
-
           return NavigationDecision.navigate;
         },
       ),
@@ -128,6 +139,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
     }
   }
 
+  Future<void> _handleLogout() async {
+    await _disposeController();
+    await SessionService.deleteSessionCookie();
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -156,16 +177,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 ),
                 actions: [
                   TextButton.icon(
-                    onPressed: () async {
-                      await _disposeController();
-                      if (mounted) {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
-                          (route) => false,
-                        );
-                      }
-                    },
+                    onPressed: _handleLogout,
                     icon: const Icon(Icons.logout, color: Colors.white),
                     label: const Text(
                       'Logout',

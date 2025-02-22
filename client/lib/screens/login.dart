@@ -15,6 +15,7 @@ import '../screens/login_with_code.dart';
 import '../screens/forgot_password.dart';
 import 'package:http/http.dart' as http;
 import '../providers/language_provider.dart';
+import '../services/session_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -30,6 +31,36 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
   String? _errorMessage;
   bool _isPressed = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSession();
+  }
+
+  Future<void> _checkSession() async {
+    final isValid = await SessionService.isSessionValid();
+    if (isValid) {
+      final cookie = await SessionService.getSessionCookie();
+      if (cookie != null && mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WebViewScreen(
+              language: context.read<LanguageProvider>().currentLanguage,
+              initialUrl: 'https://regodemo.com/mob/index.php?client=app',
+              cookie: cookie,
+            ),
+          ),
+        );
+        return;
+      }
+    }
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -50,7 +81,11 @@ class _LoginScreenState extends State<LoginScreen> {
         final response = await http.get(loginUrl);
         final setCookie = response.headers['set-cookie'];
         if (response.statusCode == 200 && response.body.contains('success')) {
-          Navigator.push(
+          if (setCookie != null) {
+            await SessionService.saveSessionCookie(setCookie);
+          }
+          if (!mounted) return;
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => WebViewScreen(
@@ -81,6 +116,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final languageProvider = context.watch<LanguageProvider>();
     final selectedLanguage = languageProvider.currentLanguage;
+
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     return Scaffold(
       body: SingleChildScrollView(
