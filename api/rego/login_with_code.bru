@@ -1,0 +1,15 @@
+meta {
+  name: login_with_code
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://regodemo.com/api/code.php
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  code: 044272
+}
