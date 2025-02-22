@@ -86,57 +86,62 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                LoginHeader(language: selectedLanguage),
-                const SizedBox(height: 24),
-                LogoLanguageSelector(
-                  selectedLanguage: selectedLanguage,
-                  onLanguageChanged: _handleLanguageChange,
-                ),
-                const SizedBox(height: 24),
-                LoginFormField(
-                  controller: _usernameController,
-                  autoFocus: true,
-                  label: AppStrings.getString('username', selectedLanguage),
-                  errorText: AppStrings.getString(
-                      'pleaseEnterUsername', selectedLanguage),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () async {
-                    _handleLogin();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4A64A9),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            LoginHeader(language: selectedLanguage),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 24),
+                    LogoLanguageSelector(
+                      selectedLanguage: selectedLanguage,
+                      onLanguageChanged: _handleLanguageChange,
                     ),
-                  ),
-                  child: Text(
-                    AppStrings.getString(
-                        'forgotPasswordTitle', selectedLanguage),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                    const SizedBox(height: 24),
+                    LoginFormField(
+                      controller: _usernameController,
+                      autoFocus: true,
+                      label: AppStrings.getString('username', selectedLanguage),
+                      errorText: AppStrings.getString(
+                          'pleaseEnterUsername', selectedLanguage),
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () async {
+                        _handleLogin();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4A64A9),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        AppStrings.getString(
+                            'forgotPasswordTitle', selectedLanguage),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    if (_errorMessage != null) ...[
+                      const SizedBox(height: 16),
+                      ErrorMessage(language: selectedLanguage),
+                    ],
+                    FooterText(language: selectedLanguage),
+                  ],
                 ),
-                if (_errorMessage != null) ...[
-                  const SizedBox(height: 16),
-                  ErrorMessage(language: selectedLanguage),
-                ],
-                FooterText(language: selectedLanguage),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
