@@ -8,6 +8,7 @@ import '../utils/app_strings.dart';
 import '../utils/app_enums.dart';
 import '../providers/language_provider.dart';
 import '../screens/web_view_screen.dart';
+import '../services/session_service.dart';
 
 class UserDetailsScreen extends StatelessWidget {
   final UserData userData;
@@ -27,6 +28,9 @@ class UserDetailsScreen extends StatelessWidget {
       final response = await http.get(loginUrl);
       final setCookie = response.headers['set-cookie'];
       if (response.statusCode == 200 && response.body.contains('success')) {
+        if (setCookie != null) {
+          await SessionService.saveSessionCookie(setCookie);
+        }
         if (!context.mounted) return;
         Navigator.pushReplacement(
           context,

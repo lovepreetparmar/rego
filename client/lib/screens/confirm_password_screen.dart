@@ -10,6 +10,7 @@ import '../models/user_data.dart';
 import '../screens/web_view_screen.dart';
 import '../providers/language_provider.dart';
 import 'package:http/http.dart' as http;
+import '../services/session_service.dart';
 
 class ConfirmPasswordScreen extends StatefulWidget {
   final UserData userData;
@@ -47,6 +48,10 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen> {
 
         if (response.statusCode == 200 && response.body.contains('success')) {
           if (!context.mounted) return;
+
+          if (setCookie != null) {
+            await SessionService.saveSessionCookie(setCookie);
+          }
 
           // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
