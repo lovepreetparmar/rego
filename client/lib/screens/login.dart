@@ -84,95 +84,100 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                LoginHeader(language: selectedLanguage),
-                const SizedBox(height: 24),
-                LogoLanguageSelector(
-                  selectedLanguage: selectedLanguage,
-                  onLanguageChanged: _handleLanguageChange,
-                ),
-                const SizedBox(height: 24),
-                LoginFormField(
-                  controller: _usernameController,
-                  autoFocus: true,
-                  label: AppStrings.getString('username', selectedLanguage),
-                  errorText: AppStrings.getString(
-                      'pleaseEnterUsername', selectedLanguage),
-                ),
-                const SizedBox(height: 16),
-                LoginFormField(
-                  controller: _passwordController,
-                  label: AppStrings.getString('password', selectedLanguage),
-                  errorText: AppStrings.getString(
-                      'pleaseEnterPassword', selectedLanguage),
-                  isPassword: true,
-                ),
-                const SizedBox(height: 16),
-                RememberMeSwitch(
-                  value: _rememberMe,
-                  language: selectedLanguage,
-                  onChanged: (value) => setState(() => _rememberMe = value),
-                ),
-                const SizedBox(height: 16),
-                LoginButtons(
-                  onLogin: _handleLogin,
-                  onForgotPassword: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ForgotPasswordScreen(),
-                      ),
-                    );
-                  },
-                  language: selectedLanguage,
-                ),
-                const SizedBox(height: 16),
-                Center(
-                  child: InkWell(
-                    onTapDown: (_) => setState(() => _isPressed = true),
-                    onTapUp: (_) => setState(() => _isPressed = false),
-                    onTapCancel: () => setState(() => _isPressed = false),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RequestPassword(),
-                        ),
-                      );
-                    },
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    child: Column(
-                      children: [
-                        Text(
-                          AppStrings.getString(
-                              'loginWithCodeQuestion', selectedLanguage),
-                          style: TextStyle(
-                            color: const Color(0xFF3B5998),
-                            fontSize: 16,
-                            decoration: _isPressed
-                                ? TextDecoration.underline
-                                : TextDecoration.none,
-                          ),
-                        ),
-                      ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            LoginHeader(language: selectedLanguage),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 24),
+                    LogoLanguageSelector(
+                      selectedLanguage: selectedLanguage,
+                      onLanguageChanged: _handleLanguageChange,
                     ),
-                  ),
+                    const SizedBox(height: 24),
+                    LoginFormField(
+                      controller: _usernameController,
+                      autoFocus: true,
+                      label: AppStrings.getString('username', selectedLanguage),
+                      errorText: AppStrings.getString(
+                          'pleaseEnterUsername', selectedLanguage),
+                    ),
+                    const SizedBox(height: 16),
+                    LoginFormField(
+                      controller: _passwordController,
+                      label: AppStrings.getString('password', selectedLanguage),
+                      errorText: AppStrings.getString(
+                          'pleaseEnterPassword', selectedLanguage),
+                      isPassword: true,
+                    ),
+                    const SizedBox(height: 16),
+                    RememberMeSwitch(
+                      value: _rememberMe,
+                      language: selectedLanguage,
+                      onChanged: (value) => setState(() => _rememberMe = value),
+                    ),
+                    const SizedBox(height: 16),
+                    LoginButtons(
+                      onLogin: _handleLogin,
+                      onForgotPassword: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordScreen(),
+                          ),
+                        );
+                      },
+                      language: selectedLanguage,
+                    ),
+                    const SizedBox(height: 16),
+                    Center(
+                      child: InkWell(
+                        onTapDown: (_) => setState(() => _isPressed = true),
+                        onTapUp: (_) => setState(() => _isPressed = false),
+                        onTapCancel: () => setState(() => _isPressed = false),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RequestPassword(),
+                            ),
+                          );
+                        },
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        child: Column(
+                          children: [
+                            Text(
+                              AppStrings.getString(
+                                  'loginWithCodeQuestion', selectedLanguage),
+                              style: TextStyle(
+                                color: const Color(0xFF3B5998),
+                                fontSize: 16,
+                                decoration: _isPressed
+                                    ? TextDecoration.underline
+                                    : TextDecoration.none,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (_errorMessage != null) ...[
+                      const SizedBox(height: 16),
+                      ErrorMessage(language: selectedLanguage),
+                    ],
+                    FooterText(language: selectedLanguage),
+                  ],
                 ),
-                if (_errorMessage != null) ...[
-                  const SizedBox(height: 16),
-                  ErrorMessage(language: selectedLanguage),
-                ],
-                FooterText(language: selectedLanguage),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
