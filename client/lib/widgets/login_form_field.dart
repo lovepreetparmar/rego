@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class LoginFormField extends StatelessWidget {
+class LoginFormField extends StatefulWidget {
   final TextEditingController controller;
   final String label;
   final String errorText;
@@ -16,12 +16,19 @@ class LoginFormField extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<LoginFormField> createState() => _LoginFormFieldState();
+}
+
+class _LoginFormFieldState extends State<LoginFormField> {
+  bool _obscureText = true;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          widget.label,
           style: const TextStyle(
             color: Colors.black87,
             fontSize: 16,
@@ -29,19 +36,32 @@ class LoginFormField extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextFormField(
-          controller: controller,
-          obscureText: isPassword,
-          autofocus: this.autoFocus,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(
+          controller: widget.controller,
+          obscureText: widget.isPassword ? _obscureText : false,
+          autofocus: widget.autoFocus,
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            contentPadding: const EdgeInsets.symmetric(
               horizontal: 12,
               vertical: 8,
             ),
+            suffixIcon: widget.isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _obscureText ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                  )
+                : null,
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return errorText;
+              return widget.errorText;
             }
             return null;
           },
