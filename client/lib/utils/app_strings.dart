@@ -98,6 +98,31 @@ class AppStrings {
       Language.en: 'Passwords do not match',
       Language.th: 'รหัสผ่านไม่ตรงกัน',
     },
+    'registrationSuccessful': {
+      Language.en:
+          'You are now successfully registered with following details:',
+      Language.th: 'คุณได้ลงทะเบียนสำเร็จแล้วด้วยรายละเอียดดังต่อไปนี้:',
+    },
+    'name': {
+      Language.en: 'Name',
+      Language.th: 'ชื่อ',
+    },
+    'employeeId': {
+      Language.en: 'Employee ID',
+      Language.th: 'รหัสพนักงาน',
+    },
+    'emailAddress': {
+      Language.en: 'Email Address',
+      Language.th: 'ที่อยู่อีเมล',
+    },
+    'phone': {
+      Language.en: 'Phone',
+      Language.th: 'โทรศัพท์',
+    },
+    'ok': {
+      Language.en: 'OK',
+      Language.th: 'ตกลง',
+    },
   };
 
   static String getString(String key, Language language) {

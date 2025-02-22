@@ -9,6 +9,8 @@ import '../utils/app_enums.dart';
 import '../widgets/app_wrapper.dart';
 import '../utils/app_strings.dart';
 import '../screens/reset_password.dart';
+import '../screens/user_details_screen.dart';
+import '../screens/confirm_password_screen.dart';
 import '../models/user_data.dart';
 import 'dart:convert';
 
@@ -179,17 +181,31 @@ class _LoginWithCodeState extends State<LoginWithCode> {
                                   );
                                 }
 
-                                // Navigate to Login screen on success
+                                // Check loginAgain value and navigate accordingly
                                 if (!context.mounted) return;
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ResetPassword(
-                                      code: code,
-                                      userData: userData,
+                                if (userData.loginAgain == 0) {
+                                  // Navigate to Reset Password screen
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ResetPassword(
+                                        code: code,
+                                        userData: userData,
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                } else {
+                                  // Navigate to Confirm Password screen
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ConfirmPasswordScreen(
+                                        userData: userData,
+                                      ),
+                                    ),
+                                  );
+                                }
                               } else {
                                 if (!context.mounted) return;
                                 ScaffoldMessenger.of(context).showSnackBar(

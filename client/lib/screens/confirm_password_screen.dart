@@ -6,90 +6,70 @@ import '../widgets/login_form_field.dart';
 import '../widgets/footer_text.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_enums.dart';
-import '../screens/login.dart';
 import '../models/user_data.dart';
-import '../screens/user_details_screen.dart';
-import 'package:http/http.dart' as http;
+import '../screens/web_view_screen.dart';
 import '../providers/language_provider.dart';
-import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-class ResetPassword extends StatefulWidget {
-  const ResetPassword({
+class ConfirmPasswordScreen extends StatefulWidget {
+  final UserData userData;
+
+  const ConfirmPasswordScreen({
     Key? key,
-    required this.code,
     required this.userData,
   }) : super(key: key);
 
-  final String code;
-  final UserData userData;
-
   @override
-  _ResetPasswordState createState() => _ResetPasswordState();
+  _ConfirmPasswordScreenState createState() => _ConfirmPasswordScreenState();
 }
 
-class _ResetPasswordState extends State<ResetPassword> {
+class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _newPasswordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  final _passwordController = TextEditingController();
   String? _errorMessage;
+
   @override
   void dispose() {
-    _newPasswordController.dispose();
-    _confirmPasswordController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  void _handleResetPassword() async {
+  Future<void> _handleConfirmPassword() async {
     if (_formKey.currentState!.validate()) {
-      final newPassword = _newPasswordController.text;
-      final confirmPassword = _confirmPasswordController.text;
-      final selectedLanguage = context.read<LanguageProvider>().currentLanguage;
-
-      if (newPassword != confirmPassword) {
-        setState(() {
-          _errorMessage =
-              AppStrings.getString('passwordsDoNotMatch', selectedLanguage);
-        });
-        return;
-      }
+      final password = _passwordController.text;
 
       try {
-        var request = http.MultipartRequest(
-          'POST',
-          Uri.parse('https://regodemo.com/api/password.php'),
-        );
-        request.fields['code'] = widget.code;
-        request.fields['npassword'] = newPassword;
-        request.fields['cpassword'] = confirmPassword;
+        final loginUrl = Uri.parse(
+            'https://regodemo.com/mob/ajax/ajax_login.php?username=${widget.userData.username}&password=$password');
 
-        var response = await request.send();
-        var responseString = await response.stream.bytesToString();
-        var responseData = json.decode(responseString);
+        final response = await http.get(loginUrl);
+        final setCookie = response.headers['set-cookie'];
 
-        if (responseData["status"] == true) {
+        if (response.statusCode == 200 && response.body.contains('success')) {
           if (!context.mounted) return;
 
           // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(responseData["msg"] ?? 'Password reset successful'),
+            const SnackBar(
+              content: Text('Login successful'),
               backgroundColor: Colors.green,
             ),
           );
 
-          // Navigate to UserDetails screen
+          // Navigate to WebView screen
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => UserDetailsScreen(
-                userData: widget.userData,
-                password: newPassword,
+              builder: (context) => WebViewScreen(
+                language: context.read<LanguageProvider>().currentLanguage,
+                initialUrl: 'https://regodemo.com/mob/index.php?client=app',
+                cookie: setCookie ?? '',
               ),
             ),
           );
         } else {
           setState(() {
-            _errorMessage = responseData["msg"] ?? 'Password reset failed';
+            _errorMessage = 'Invalid password';
           });
         }
       } catch (e) {
@@ -137,25 +117,15 @@ class _ResetPasswordState extends State<ResetPassword> {
                     ),
                     const SizedBox(height: 16),
                     LoginFormField(
-                      controller: _newPasswordController,
-                      label:
-                          AppStrings.getString('newPassword', selectedLanguage),
+                      controller: _passwordController,
+                      label: AppStrings.getString('password', selectedLanguage),
                       errorText: AppStrings.getString(
-                          'pleaseEnterNewPassword', selectedLanguage),
-                      isPassword: true,
-                    ),
-                    const SizedBox(height: 16),
-                    LoginFormField(
-                      controller: _confirmPasswordController,
-                      label: AppStrings.getString(
-                          'confirmPassword', selectedLanguage),
-                      errorText: AppStrings.getString(
-                          'pleaseConfirmPassword', selectedLanguage),
+                          'pleaseEnterPassword', selectedLanguage),
                       isPassword: true,
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: _handleResetPassword,
+                      onPressed: _handleConfirmPassword,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF4A64A9),
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -164,7 +134,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                         ),
                       ),
                       child: Text(
-                        AppStrings.getString('resetPassword', selectedLanguage),
+                        AppStrings.getString('login', selectedLanguage),
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white,
