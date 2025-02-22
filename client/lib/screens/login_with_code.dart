@@ -11,14 +11,14 @@ import '../utils/app_strings.dart';
 import '../screens/reset_password.dart';
 import 'dart:convert';
 
-class RequestPassword extends StatefulWidget {
-  const RequestPassword({super.key});
+class LoginWithCode extends StatefulWidget {
+  const LoginWithCode({super.key});
 
   @override
-  State<RequestPassword> createState() => _RequestPasswordState();
+  State<LoginWithCode> createState() => _LoginWithCodeState();
 }
 
-class _RequestPasswordState extends State<RequestPassword> {
+class _LoginWithCodeState extends State<LoginWithCode> {
   final List<TextEditingController> codeControllers = List.generate(
     6,
     (index) => TextEditingController(),

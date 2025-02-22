@@ -11,7 +11,7 @@ import '../widgets/footer_text.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_enums.dart';
 import '../screens/web_view_screen.dart';
-import '../screens/request_password.dart';
+import '../screens/login_with_code.dart';
 import '../screens/forgot_password.dart';
 import 'package:http/http.dart' as http;
 import '../providers/language_provider.dart';
@@ -145,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const RequestPassword(),
+                              builder: (context) => const LoginWithCode(),
                             ),
                           );
                         },
