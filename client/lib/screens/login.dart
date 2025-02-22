@@ -49,9 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         final response = await http.get(loginUrl);
         final setCookie = response.headers['set-cookie'];
-        print(response.statusCode);
-        print(response.body);
-        print(setCookie);
         if (response.statusCode == 200 && response.body.contains('success')) {
           Navigator.push(
             context,
