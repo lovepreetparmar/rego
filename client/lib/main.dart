@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/login.dart';
+import 'screens/login_with_code.dart';
 import 'providers/language_provider.dart';
 
 void main() {
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: const LoginScreen(),
+          home: const LoginWithCode(),
         ),
       ),
     );

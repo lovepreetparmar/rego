@@ -86,15 +86,15 @@ class LogoLanguageSelector extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            const Divider(
-              height: 1,
-              thickness: 1,
-              color: Color(0xFF3B5998),
-            ),
-            if (showLock)
+        if (showLock)
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              const Divider(
+                height: 1,
+                thickness: 1,
+                color: Color(0xFF3B5998),
+              ),
               Container(
                 color: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -104,8 +104,8 @@ class LogoLanguageSelector extends StatelessWidget {
                   size: 20,
                 ),
               ),
-          ],
-        ),
+            ],
+          ),
       ],
     );
   }

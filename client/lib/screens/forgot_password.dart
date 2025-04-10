@@ -89,7 +89,62 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            LoginHeader(language: selectedLanguage),
+            Container(
+              color: Colors.black,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image.asset(
+                    'assets/logo.png',
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: 80,
+                        child: DropdownButton<Language>(
+                          value: selectedLanguage,
+                          onChanged: (Language? language) {
+                            if (language != null) {
+                              _handleLanguageChange(language);
+                            }
+                          },
+                          isDense: true,
+                          padding: EdgeInsets.zero,
+                          underline: Container(),
+                          itemHeight: 48,
+                          dropdownColor: const Color(0xFF6f9ed1),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                          items: const [
+                            DropdownMenuItem(
+                              value: Language.en,
+                              child: SizedBox(
+                                height: 16,
+                                child: Image(
+                                    image: AssetImage('assets/flag_en.png')),
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: Language.th,
+                              child: SizedBox(
+                                height: 16,
+                                child: Image(
+                                    image: AssetImage('assets/flag_th.png')),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
@@ -97,11 +152,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 24),
-                    LogoLanguageSelector(
-                      selectedLanguage: selectedLanguage,
-                      onLanguageChanged: _handleLanguageChange,
-                    ),
                     const SizedBox(height: 24),
                     LoginFormField(
                       controller: _usernameController,
@@ -116,7 +166,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         _handleLogin();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF4A64A9),
+                        backgroundColor: const Color(0xFF6f9ed1),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -136,7 +186,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       const SizedBox(height: 16),
                       ErrorMessage(language: selectedLanguage),
                     ],
-                    FooterText(language: selectedLanguage),
                   ],
                 ),
               ),

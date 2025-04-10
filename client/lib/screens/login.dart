@@ -167,7 +167,62 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            LoginHeader(language: selectedLanguage),
+            Container(
+              color: Colors.black,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image.asset(
+                    'assets/logo.png',
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: 80,
+                        child: DropdownButton<Language>(
+                          value: selectedLanguage,
+                          onChanged: (Language? language) {
+                            if (language != null) {
+                              _handleLanguageChange(language);
+                            }
+                          },
+                          isDense: true,
+                          padding: EdgeInsets.zero,
+                          underline: Container(),
+                          itemHeight: 48,
+                          dropdownColor: const Color(0xFF6f9ed1),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                          items: const [
+                            DropdownMenuItem(
+                              value: Language.en,
+                              child: SizedBox(
+                                height: 16,
+                                child: Image(
+                                    image: AssetImage('assets/flag_en.png')),
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: Language.th,
+                              child: SizedBox(
+                                height: 16,
+                                child: Image(
+                                    image: AssetImage('assets/flag_th.png')),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Form(
@@ -175,11 +230,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 24),
-                    LogoLanguageSelector(
-                      selectedLanguage: selectedLanguage,
-                      onLanguageChanged: _handleLanguageChange,
-                    ),
                     const SizedBox(height: 24),
                     LoginFormField(
                       controller: _usernameController,
@@ -201,6 +251,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       value: _rememberMe,
                       language: selectedLanguage,
                       onChanged: (value) => setState(() => _rememberMe = value),
+                      switchColor: const Color(0xFF6f9ed1),
                     ),
                     const SizedBox(height: 16),
                     LoginButtons(
@@ -214,37 +265,27 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       },
                       language: selectedLanguage,
+                      buttonColor: const Color(0xFF6f9ed1),
                     ),
                     const SizedBox(height: 16),
-                    Center(
-                      child: InkWell(
-                        onTapDown: (_) => setState(() => _isPressed = true),
-                        onTapUp: (_) => setState(() => _isPressed = false),
-                        onTapCancel: () => setState(() => _isPressed = false),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginWithCode(),
-                            ),
-                          );
-                        },
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        child: Column(
-                          children: [
-                            Text(
-                              AppStrings.getString(
-                                  'loginWithCodeQuestion', selectedLanguage),
-                              style: TextStyle(
-                                color: const Color(0xFF3B5998),
-                                fontSize: 16,
-                                decoration: _isPressed
-                                    ? TextDecoration.underline
-                                    : TextDecoration.none,
-                              ),
-                            ),
-                          ],
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginWithCode(),
+                          ),
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: const Color(0xFF6f9ed1),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: Text(
+                        AppStrings.getString('loginWithCodeQuestion', selectedLanguage),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -252,7 +293,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 16),
                       ErrorMessage(language: selectedLanguage),
                     ],
-                    FooterText(language: selectedLanguage),
                   ],
                 ),
               ),

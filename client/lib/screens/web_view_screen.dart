@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter/services.dart';
+import 'dart:io';
 import 'login.dart';
 import '../utils/app_enums.dart';
 import '../widgets/app_header.dart';
 import '../services/session_service.dart';
+import 'package:share_plus/share_plus.dart';
 
 class WebViewScreen extends StatefulWidget {
   final Language language;
@@ -149,6 +152,27 @@ class _WebViewScreenState extends State<WebViewScreen> {
     );
   }
 
+  void _handleExit() {
+    _disposeController();
+    exit(0);
+  }
+
+  void _handleAppPassCode() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('App Pass Code functionality coming soon'),
+        backgroundColor: Colors.blue,
+      ),
+    );
+  }
+
+  void _handleShareLink() {
+    Share.share(
+      'Check out Rego HR app: https://apps.apple.com/us/app/rego-hr/id6742355882',
+      subject: 'Rego HR App',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -160,43 +184,83 @@ class _WebViewScreenState extends State<WebViewScreen> {
         body: Column(
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFF3B5998),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                ),
-              ),
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                automaticallyImplyLeading: false,
-                flexibleSpace: AppHeader(
-                  language: widget.language,
-                  title: 'Welcome to Rego',
-                ),
-                actions: [
-                  TextButton.icon(
-                    onPressed: _handleLogout,
+              color: Colors.black,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image.asset(
+                    'assets/logo.png',
+                    height: 40,
+                  ),
+                  PopupMenuButton<String>(
                     icon: const Icon(Icons.logout, color: Colors.white),
-                    label: const Text(
-                      'Logout',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    color: Colors.white,
+                    itemBuilder: (BuildContext context) => [
+                      const PopupMenuItem<String>(
+                        value: 'exit',
+                        child: Row(
+                          children: [
+                            Icon(Icons.exit_to_app, color: Colors.black87),
+                            SizedBox(width: 8),
+                            Text('Exit'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'logout',
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout, color: Colors.black87),
+                            SizedBox(width: 8),
+                            Text('Logout'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'app_pass_code',
+                        child: Row(
+                          children: [
+                            Icon(Icons.lock, color: Colors.black87),
+                            SizedBox(width: 8),
+                            Text('App Pass Code'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'share_link',
+                        child: Row(
+                          children: [
+                            Icon(Icons.share, color: Colors.black87),
+                            SizedBox(width: 8),
+                            Text('Share Link'),
+                          ],
+                        ),
+                      ),
+                    ],
+                    onSelected: (String value) {
+                      switch (value) {
+                        case 'exit':
+                          _handleExit();
+                          break;
+                        case 'logout':
+                          _handleLogout();
+                          break;
+                        case 'app_pass_code':
+                          _handleAppPassCode();
+                          break;
+                        case 'share_link':
+                          _handleShareLink();
+                          break;
+                      }
+                    },
                   ),
                 ],
               ),
             ),
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(8),
-                    bottomRight: Radius.circular(8),
-                  ),
-                ),
-                clipBehavior: Clip.antiAlias,
+                color: Colors.white,
                 child: _isControllerReady && controller != null
                     ? WebViewWidget(controller: controller!)
                     : const Center(child: CircularProgressIndicator()),

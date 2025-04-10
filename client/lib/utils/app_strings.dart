@@ -63,7 +63,7 @@ class AppStrings {
       Language.th: 'เข้าสู่ระบบด้วยรหัส',
     },
     'loginWithCodeQuestion': {
-      Language.en: 'Or, Login with code?',
+      Language.en: 'Login with code',
       Language.th: 'หรือ เข้าสู่ระบบด้วยรหัส?',
     },
     'forgotPasswordTitle': {

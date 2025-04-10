@@ -6,12 +6,14 @@ class LoginButtons extends StatelessWidget {
   final VoidCallback onLogin;
   final VoidCallback onForgotPassword;
   final Language language;
+  final Color buttonColor;
 
   const LoginButtons({
     Key? key,
     required this.onLogin,
     required this.onForgotPassword,
     required this.language,
+    this.buttonColor = const Color(0xFF6f9ed1),
   }) : super(key: key);
 
   @override
@@ -22,7 +24,7 @@ class LoginButtons extends StatelessWidget {
         ElevatedButton(
           onPressed: onLogin,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF3B5998),
+            backgroundColor: buttonColor,
             padding: const EdgeInsets.symmetric(vertical: 16),
           ),
           child: Text(
@@ -37,7 +39,7 @@ class LoginButtons extends StatelessWidget {
         TextButton(
           onPressed: onForgotPassword,
           style: TextButton.styleFrom(
-            backgroundColor: const Color(0xFF3B5998),
+            backgroundColor: buttonColor,
             padding: const EdgeInsets.symmetric(vertical: 16),
           ),
           child: Text(

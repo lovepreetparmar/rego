@@ -6,12 +6,14 @@ class RememberMeSwitch extends StatelessWidget {
   final bool value;
   final Language language;
   final ValueChanged<bool> onChanged;
+  final Color switchColor;
 
   const RememberMeSwitch({
     Key? key,
     required this.value,
     required this.language,
     required this.onChanged,
+    this.switchColor = const Color(0xFF6f9ed1),
   }) : super(key: key);
 
   @override
@@ -21,6 +23,8 @@ class RememberMeSwitch extends StatelessWidget {
         Switch(
           value: value,
           onChanged: onChanged,
+          activeColor: switchColor,
+          activeTrackColor: switchColor.withOpacity(0.5),
         ),
         Text(
           AppStrings.getString('rememberMe', language),
