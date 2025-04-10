@@ -168,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              color: const Color(0xFF6f9ed1),
+              color: Colors.black,
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -193,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: EdgeInsets.zero,
                           underline: Container(),
                           itemHeight: 48,
-                          dropdownColor: const Color(0xFF6f9ed1),
+                          dropdownColor: Colors.black,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
