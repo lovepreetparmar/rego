@@ -63,7 +63,7 @@ class _LoginWithCodeState extends State<LoginWithCode> {
         child: Column(
           children: [
             Container(
-              color: Colors.black,
+              color: const Color(0xFF6f9ed1),
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

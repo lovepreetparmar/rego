@@ -184,7 +184,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         body: Column(
           children: [
             Container(
-              color: Colors.black,
+              color: const Color(0xFF6f9ed1),
               padding: const EdgeInsets.symmetric(vertical: 14),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
