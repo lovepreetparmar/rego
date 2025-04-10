@@ -63,7 +63,7 @@ class _LoginWithCodeState extends State<LoginWithCode> {
         child: Column(
           children: [
             Container(
-              color: const Color(0xFF6f9ed1),
+              color: Colors.black,
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,7 +88,7 @@ class _LoginWithCodeState extends State<LoginWithCode> {
                           padding: EdgeInsets.zero,
                           underline: Container(),
                           itemHeight: 48,
-                          dropdownColor: const Color(0xFF6f9ed1),
+                          dropdownColor: Colors.black,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
